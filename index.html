@@ -61,7 +61,7 @@ function assinatura(p, c){
   const zap = p.zap.replace(/\D/g,'');
   const linhaZap = p.zap ? `
         <tr><td style="padding:2px 0;font-size:13px;color:${CINZA};">
-          <span style="color:#1fa855;font-weight:bold;">WhatsApp</span>&nbsp;
+          <img src="${esc(c.logo.replace(/[^\/]*$/,'icone-whatsapp.png'))}" alt="WhatsApp" width="16" height="16" style="vertical-align:middle;border:0;width:16px;height:16px;">&nbsp;
           <a href="https://wa.me/55${zap}" style="color:${MAR};text-decoration:none;">${esc(p.zap)}</a>
         </td></tr>` : '';
   return `<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:Segoe UI,Arial,sans-serif;">
