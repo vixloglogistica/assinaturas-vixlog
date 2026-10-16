@@ -71,8 +71,8 @@ function assinatura(p, c){
     </td>
     <td style="padding:0 0 0 18px;vertical-align:middle;">
       <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
-        <tr><td style="font-size:17px;font-weight:bold;color:${MAR};padding:0;">${esc(p.nome)}</td></tr>
-        <tr><td style="font-size:13px;color:${AZ};font-weight:600;padding:1px 0 8px;">${esc(p.cargo)}</td></tr>
+        <tr><td style="font-size:17px;font-weight:bold;color:${MAR};padding:${p.cargo ? '0' : '0 0 8px'};">${esc(p.nome)}</td></tr>${p.cargo ? `
+        <tr><td style="font-size:13px;color:${AZ};font-weight:600;padding:1px 0 8px;">${esc(p.cargo)}</td></tr>` : ''}
         <tr><td style="padding:2px 0;font-size:13px;color:${CINZA};">
           <span style="color:${AZ};font-weight:bold;">Tel</span>&nbsp;
           <a href="tel:+55${c.tel.replace(/\D/g,'')}" style="color:${MAR};text-decoration:none;">${esc(c.tel)}</a>
