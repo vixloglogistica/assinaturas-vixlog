@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assinaturas de e-mail — Vix Log</title>
+<style>
+  :root{--az:#0A6BFA;--mar:#0B2A5B;--bg:#f3f5f9;--bd:#dde2ec}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:var(--bg);color:#1c2433}
+  header{background:var(--mar);color:#fff;padding:18px 28px}
+  header h1{margin:0;font-size:20px} header p{margin:4px 0 0;opacity:.8;font-size:13px}
+  main{max-width:1100px;margin:0 auto;padding:22px;display:grid;grid-template-columns:340px 1fr;gap:22px}
+  @media(max-width:860px){main{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:16px}
+  h2{font-size:15px;margin:0 0 10px;color:var(--mar)}
+  label{display:block;font-size:12px;font-weight:600;margin:10px 0 3px;color:#4a5670}
+  input,textarea{width:100%;padding:8px 10px;border:1px solid var(--bd);border-radius:6px;font:inherit;font-size:13px}
+  textarea{height:230px;font-family:Consolas,monospace;font-size:12px;white-space:pre}
+  .hint{font-size:11.5px;color:#6b7690;margin:6px 0 0;line-height:1.4}
+  button{background:var(--az);color:#fff;border:0;border-radius:6px;padding:8px 14px;font-weight:600;cursor:pointer;font-size:13px}
+  button:hover{background:#0857cc} button.sec{background:#fff;color:var(--az);border:1px solid var(--az)}
+  .item{margin-bottom:18px}
+  .item .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px}
+  .item .top b{font-size:13px}
+  .prev{border:1px dashed var(--bd);border-radius:8px;padding:14px;background:#fff;overflow:auto}
+  .ok{background:#1f9d55!important}
+</style>
+</head>
+<body>
+<header>
+  <h1>Assinaturas de e-mail — Vix Log</h1>
+  <p>Cole a lista de colaboradores, clique em “Copiar” e cole na assinatura do e-mail.</p>
+</header>
+<main>
+  <section class="card">
+    <h2>Dados fixos da empresa</h2>
+    <label>URL pública da logo (PNG)</label>
+    <input id="logo" value="https://vixloglogistica.github.io/assinaturas-vixlog/logo-vix.png">
+    <label>Telefone fixo</label><input id="tel" value="(27) 3067-2994">
+    <label>Site</label><input id="site" value="www.vixloglogistica.com.br">
+    <label>Endereço</label><input id="end" value="Av Civit, 497 - Galpão 01 - Módulos 01 e 02, Civit I, Serra - ES">
+    <label>Domínio do e-mail (se o e-mail vier sem @)</label><input id="dom" value="vixloglogistica.com.br">
+    <h2 style="margin-top:18px">Colaboradores</h2>
+    <p class="hint">Uma pessoa por linha, separado por <b>;</b><br>
+      <b>Nome ; Cargo ; e-mail ; WhatsApp</b><br>
+      E-mail pode ser só o usuário (ex.: ramon). WhatsApp é opcional.</p>
+    <textarea id="lista" spellcheck="false">Ramon Fadini Gogge ; Gerente de Logística ; ramon ; (27) 99243-2325</textarea>
+    <p style="margin-top:10px"><button id="gerar">Gerar assinaturas</button></p>
+  </section>
+  <section id="saida"></section>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const AZ='#0A6BFA', MAR='#0B2A5B', CINZA='#5b6477';
+
+function assinatura(p, c){
+  const email = p.email.includes('@') ? p.email : p.email + '@' + c.dom;
+  const zap = p.zap.replace(/\D/g,'');
+  const linhaZap = p.zap ? `
+        <tr><td style="padding:2px 0;font-size:13px;color:${CINZA};">
+          <span style="color:#1fa855;font-weight:bold;">WhatsApp</span>&nbsp;
+          <a href="https://wa.me/55${zap}" style="color:${MAR};text-decoration:none;">${esc(p.zap)}</a>
+        </td></tr>` : '';
+  return `<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:Segoe UI,Arial,sans-serif;">
+  <tr>
+    <td style="padding:0 18px 0 0;vertical-align:middle;border-right:3px solid ${AZ};">
+      <img src="${esc(c.logo)}" alt="Vix Log — Operador Logístico" width="190" style="display:block;width:190px;height:auto;border:0;">
+    </td>
+    <td style="padding:0 0 0 18px;vertical-align:middle;">
+      <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+        <tr><td style="font-size:17px;font-weight:bold;color:${MAR};padding:0;">${esc(p.nome)}</td></tr>
+        <tr><td style="font-size:13px;color:${AZ};font-weight:600;padding:1px 0 8px;">${esc(p.cargo)}</td></tr>
+        <tr><td style="padding:2px 0;font-size:13px;color:${CINZA};">
+          <span style="color:${AZ};font-weight:bold;">Tel</span>&nbsp;
+          <a href="tel:+55${c.tel.replace(/\D/g,'')}" style="color:${MAR};text-decoration:none;">${esc(c.tel)}</a>
+        </td></tr>${linhaZap}
+        <tr><td style="padding:2px 0;font-size:13px;color:${CINZA};">
+          <span style="color:${AZ};font-weight:bold;">E-mail</span>&nbsp;
+          <a href="mailto:${esc(email)}" style="color:${MAR};text-decoration:none;">${esc(email)}</a>
+        </td></tr>
+        <tr><td style="padding:2px 0;font-size:13px;color:${CINZA};">
+          <span style="color:${AZ};font-weight:bold;">Site</span>&nbsp;
+          <a href="https://${esc(c.site.replace(/^https?:\/\//,''))}" style="color:${MAR};text-decoration:none;">${esc(c.site)}</a>
+        </td></tr>
+        <tr><td style="padding:6px 0 0;font-size:12px;color:#8a93a6;">${esc(c.end)}</td></tr>
+      </table>
+    </td>
+  </tr>
+  <tr><td colspan="2" style="padding-top:10px;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;"><tr>
+      <td style="background:${AZ};height:3px;font-size:0;line-height:0;" width="35%">&nbsp;</td>
+      <td style="background:${MAR};height:3px;font-size:0;line-height:0;">&nbsp;</td>
+    </tr></table>
+    <div style="font-size:11px;color:#8a93a6;padding-top:5px;">Antes de imprimir, pense na sua responsabilidade com o meio ambiente.</div>
+  </td></tr>
+</table>`;
+}
+
+function gerar(){
+  const c = {logo:$('logo').value.trim(), tel:$('tel').value.trim(), site:$('site').value.trim(),
+             end:$('end').value.trim(), dom:$('dom').value.trim()};
+  localStorage.setItem('vixsig', JSON.stringify({c, lista:$('lista').value}));
+  const pessoas = $('lista').value.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
+    const [nome='',cargo='',email='',zap='']=l.split(';').map(s=>s.trim());
+    return {nome,cargo,email,zap};
+  }).filter(p=>p.nome && p.email);
+  const out = $('saida'); out.innerHTML='';
+  pessoas.forEach((p,i)=>{
+    const html = assinatura(p,c);
+    const d = document.createElement('div'); d.className='card item';
+    d.innerHTML = `<div class="top"><b>${esc(p.nome)}</b><span>
+      <button class="sec" data-m="src">Copiar código HTML</button>
+      <button data-m="vis">Copiar assinatura</button></span></div><div class="prev">${html}</div>`;
+    d.querySelector('[data-m=vis]').onclick = e => copiarVisual(d.querySelector('.prev'), e.target);
+    d.querySelector('[data-m=src]').onclick = e => copiarTexto(html, e.target);
+    out.appendChild(d);
+  });
+}
+function ok(btn){const t=btn.textContent;btn.textContent='Copiado ✓';btn.classList.add('ok');setTimeout(()=>{btn.textContent=t;btn.classList.remove('ok')},1500)}
+async function copiarVisual(el, btn){
+  const html = el.innerHTML;
+  try{
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html],{type:'text/html'}),
+      'text/plain': new Blob([el.innerText],{type:'text/plain'})})]);
+  }catch(e){
+    const r=document.createRange(); r.selectNode(el); const s=getSelection(); s.removeAllRanges(); s.addRange(r);
+    document.execCommand('copy'); s.removeAllRanges();
+  }
+  ok(btn);
+}
+async function copiarTexto(t, btn){ try{await navigator.clipboard.writeText(t)}catch(e){} ok(btn); }
+
+$('gerar').onclick = gerar;
+try{
+  const s = JSON.parse(localStorage.getItem('vixsig')||'null');
+  if(s){ Object.entries(s.c).forEach(([k,v])=>$(k==='end'?'end':k).value=v); $('lista').value=s.lista; }
+}catch(e){}
+gerar();
+</script>
+</body>
+</html>
