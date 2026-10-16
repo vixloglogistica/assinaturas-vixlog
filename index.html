@@ -141,7 +141,7 @@ function modoColaborador(d){
   const html = assinatura(d.p, d.c);
   document.body.innerHTML = `
   <header><h1>Sua assinatura de e-mail — Vix Log</h1>
-    <p>Olá, ${esc(d.p.nome.split(' ')[0])}! Copie e cole no Gmail em 3 passos.</p></header>
+    <p>Olá, ${esc(d.p.nome.split(' ')[0])}! Copie a assinatura e siga o passo a passo do Gmail ou do Outlook abaixo.</p></header>
   <main style="display:block;max-width:760px">
     <div class="card item">
       <div class="prev">${html}</div>
@@ -155,8 +155,24 @@ function modoColaborador(d){
         <li>No Gmail: engrenagem ⚙ → <b>Ver todas as configurações</b> → role até <b>Assinatura</b> → <b>Criar</b> (dê o nome “Vix Log”).</li>
         <li>Clique na caixa de texto e cole com <b>Ctrl+V</b> (Mac: <b>Cmd+V</b>). Em “Padrões de assinatura”, escolha “Vix Log” para <b>e-mails novos</b> e para <b>respostas</b>. Role até o final e clique em <b>Salvar alterações</b>.</li>
       </ol>
-      <h2 style="margin-top:16px">No Outlook</h2>
-      <p class="hint" style="font-size:13px">Configurações → Contas → Assinaturas → Nova assinatura → cole com Ctrl+V → Salvar.</p>
+      <p class="hint" style="font-size:13px">Faça isso no <b>computador</b>. No aplicativo do celular não dá para colar a assinatura formatada; depois de salva no computador, ela passa a valer também no celular.</p>
+    </div>
+    <div class="card item">
+      <h2>No Outlook (novo ou versão web)</h2>
+      <ol style="line-height:1.7;font-size:14px;margin:0;padding-left:20px">
+        <li>Clique em <b>Copiar minha assinatura</b> (na parte de cima desta página).</li>
+        <li>No Outlook, clique na engrenagem ⚙ (Configurações) → <b>Contas</b> → <b>Assinaturas</b>.</li>
+        <li>Clique em <b>Nova assinatura</b>, dê o nome “Vix Log” e cole com <b>Ctrl+V</b> na caixa de texto.</li>
+        <li>Em “Selecionar assinaturas padrão”, escolha “Vix Log” para <b>novas mensagens</b> e para <b>respostas/encaminhamentos</b>. Clique em <b>Salvar</b>.</li>
+      </ol>
+      <h2 style="margin-top:16px">No Outlook para computador (versão clássica)</h2>
+      <ol style="line-height:1.7;font-size:14px;margin:0;padding-left:20px">
+        <li>Clique em <b>Copiar minha assinatura</b> (na parte de cima desta página).</li>
+        <li>No Outlook: <b>Arquivo</b> → <b>Opções</b> → <b>Email</b> → <b>Assinaturas…</b></li>
+        <li>Clique em <b>Novo</b>, dê o nome “Vix Log” e cole com <b>Ctrl+V</b> na caixa “Editar assinatura”.</li>
+        <li>Ao lado, em “Escolher assinatura padrão”, selecione “Vix Log” em <b>Novas mensagens</b> e em <b>Respostas/encaminhamentos</b>. Clique em <b>OK</b>.</li>
+      </ol>
+      <p class="hint" style="font-size:13px">Se a logo aparecer maior ou menor que o normal, clique nela dentro da assinatura e ajuste o tamanho (largura de cerca de 190 px).</p>
     </div>
   </main>`;
   document.getElementById('meu').onclick = e => copiarVisual(document.querySelector('.prev'), e.target);
