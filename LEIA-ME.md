@@ -17,3 +17,6 @@
 - **Outlook desktop**: Arquivo → Opções → Email → Assinaturas → Nova → Ctrl+V.
 
 Dica: Google Workspace e Microsoft 365 permitem ao administrador aplicar a assinatura de todos de uma vez (via código HTML) — dá para automatizar depois.
+
+## Links individuais
+No gerador, "Copiar link da pessoa" (ou "Copiar todos os links") cria um link por colaborador. Quem abre o link vê só a própria assinatura, com o botão "Copiar minha assinatura" e o passo a passo do Gmail/Outlook. Os dados vão dentro do link (após o #), sem servidor.

@@ -112,12 +112,54 @@ function gerar(){
     const html = assinatura(p,c);
     const d = document.createElement('div'); d.className='card item';
     d.innerHTML = `<div class="top"><b>${esc(p.nome)}</b><span>
+      <button class="sec" data-m="lnk">Copiar link da pessoa</button>
       <button class="sec" data-m="src">Copiar código HTML</button>
       <button data-m="vis">Copiar assinatura</button></span></div><div class="prev">${html}</div>`;
     d.querySelector('[data-m=vis]').onclick = e => copiarVisual(d.querySelector('.prev'), e.target);
     d.querySelector('[data-m=src]').onclick = e => copiarTexto(html, e.target);
+    d.querySelector('[data-m=lnk]').onclick = e => copiarTexto(linkPessoa(p,c), e.target);
     out.appendChild(d);
   });
+  if(pessoas.length){
+    const t = document.createElement('div'); t.className='card';
+    t.innerHTML = `<b style="font-size:13px">Links para enviar à equipe</b>
+      <p class="hint">Cada pessoa abre o próprio link, clica em “Copiar minha assinatura” e cola no Gmail. Nada fica salvo em servidor: os dados vão dentro do link.</p>
+      <button id="todos">Copiar todos os links (Nome — link)</button>`;
+    out.appendChild(t);
+    t.querySelector('#todos').onclick = e => copiarTexto(
+      pessoas.map(p=>`${p.nome} — ${linkPessoa(p,c)}`).join('\n'), e.target);
+  }
+}
+
+/* ===== links individuais (os dados vão no # da URL, não passam por servidor) ===== */
+function b64enc(o){ return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+function b64dec(s){ s=s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4) s+='='; return JSON.parse(decodeURIComponent(escape(atob(s)))); }
+function linkPessoa(p,c){ return location.origin + location.pathname + '#a=' + b64enc({c,p}); }
+
+function modoColaborador(d){
+  document.title = 'Minha assinatura — Vix Log';
+  const html = assinatura(d.p, d.c);
+  document.body.innerHTML = `
+  <header><h1>Sua assinatura de e-mail — Vix Log</h1>
+    <p>Olá, ${esc(d.p.nome.split(' ')[0])}! Copie e cole no Gmail em 3 passos.</p></header>
+  <main style="display:block;max-width:760px">
+    <div class="card item">
+      <div class="prev">${html}</div>
+      <p style="margin:14px 0 0"><button id="meu" style="font-size:15px;padding:11px 20px">Copiar minha assinatura</button></p>
+      <p class="hint">Confira se seu nome, cargo e telefones estão corretos. Se algo estiver errado, avise o administrador antes de colar.</p>
+    </div>
+    <div class="card item">
+      <h2>No Gmail</h2>
+      <ol style="line-height:1.7;font-size:14px;margin:0;padding-left:20px">
+        <li>Clique em <b>Copiar minha assinatura</b> (acima).</li>
+        <li>No Gmail: engrenagem ⚙ → <b>Ver todas as configurações</b> → role até <b>Assinatura</b> → <b>Criar</b> (dê o nome “Vix Log”).</li>
+        <li>Clique na caixa de texto e cole com <b>Ctrl+V</b> (Mac: <b>Cmd+V</b>). Em “Padrões de assinatura”, escolha “Vix Log” para <b>e-mails novos</b> e para <b>respostas</b>. Role até o final e clique em <b>Salvar alterações</b>.</li>
+      </ol>
+      <h2 style="margin-top:16px">No Outlook</h2>
+      <p class="hint" style="font-size:13px">Configurações → Contas → Assinaturas → Nova assinatura → cole com Ctrl+V → Salvar.</p>
+    </div>
+  </main>`;
+  document.getElementById('meu').onclick = e => copiarVisual(document.querySelector('.prev'), e.target);
 }
 function ok(btn){const t=btn.textContent;btn.textContent='Copiado ✓';btn.classList.add('ok');setTimeout(()=>{btn.textContent=t;btn.classList.remove('ok')},1500)}
 async function copiarVisual(el, btn){
@@ -134,12 +176,20 @@ async function copiarVisual(el, btn){
 }
 async function copiarTexto(t, btn){ try{await navigator.clipboard.writeText(t)}catch(e){} ok(btn); }
 
-$('gerar').onclick = gerar;
-try{
-  const s = JSON.parse(localStorage.getItem('vixsig')||'null');
-  if(s){ Object.entries(s.c).forEach(([k,v])=>$(k==='end'?'end':k).value=v); $('lista').value=s.lista; }
-}catch(e){}
-gerar();
+let modoCol = null;
+if(location.hash.startsWith('#a=')){
+  try{ modoCol = b64dec(location.hash.slice(3)); }catch(e){ modoCol = null; }
+}
+if(modoCol){
+  modoColaborador(modoCol);
+}else{
+  $('gerar').onclick = gerar;
+  try{
+    const s = JSON.parse(localStorage.getItem('vixsig')||'null');
+    if(s){ Object.entries(s.c).forEach(([k,v])=>$(k==='end'?'end':k).value=v); $('lista').value=s.lista; }
+  }catch(e){}
+  gerar();
+}
 </script>
 </body>
 </html>
